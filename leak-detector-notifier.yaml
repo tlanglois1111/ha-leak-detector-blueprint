@@ -1,8 +1,18 @@
 blueprint:
   name: Leak detection & notification
-  description: Send a notification when any configured moisture sensor becomes moist
+  description: Send a notification when any selected moisture sensor becomes moist
   domain: automation
   input:
+    moisture_sensors:
+      name: Moisture Sensors
+      description: Moisture sensors to monitor for leaks
+      selector:
+        entity:
+          filter:
+            - domain: binary_sensor
+              device_class: moisture
+          multiple: true
+
     excluded_sensors:
       name: Excluded Sensors
       description: Moisture sensors to exclude from leak detection (e.g., outdoor rain sensors)
@@ -13,36 +23,28 @@ blueprint:
             - domain: binary_sensor
               device_class: moisture
           multiple: true
+
     actions:
       name: Actions
       description: >
         Notifications or similar to be run.
-        Use {{ trigger.event.data.new_state.attributes.friendly_name }} in a message
+        Use {{ trigger.to_state.name }} in a message
         for a friendly name of the sensor.
       selector:
         action: {}
 
 trigger:
-  - platform: event
-    event_type: state_changed
-    event_data: {}
+  # Only these selected moisture sensors
+  - platform: state
+    entity_id: !input moisture_sensors
+    from: "off"
+    to: "on"
 
 condition:
-  # Only moisture sensors
-  - condition: template
-    value_template: >
-      {{ trigger.event.data.new_state is not none
-         and trigger.event.data.new_state.attributes.device_class == "moisture" }}
-
-  # Only when they turn "on" (wet)
-  - condition: template
-    value_template: >
-      {{ trigger.event.data.new_state.state == "on" }}
-
   # Exclude selected sensors
   - condition: template
     value_template: >
-      {{ trigger.event.data.entity_id not in !input excluded_sensors }}
+      {{ trigger.entity_id not in !input excluded_sensors }}
 
 action:
   - choose: []
