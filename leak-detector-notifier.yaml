@@ -31,7 +31,9 @@ condition:
 - condition: template
   value_template: '{{ trigger.event.data.new_state.state == "on" }}'
 - condition: template
-  value_template: '{{ trigger.event.data.entity_id not in (excluded_sensors | list) }}'
+  value_template: >
+    {% set excluded = excluded_sensors %}
+    {{ trigger.event.data.entity_id not in excluded }}
 action:
 - choose: []
   default: !input actions
