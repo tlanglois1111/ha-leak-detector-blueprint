@@ -19,7 +19,6 @@ blueprint:
         }} in a message for a friendly name of the sensor.
       selector:
         action: {}
-  source_url: https://gist.github.com/TurtleFX/213bd28f5cfb1a7cded5eb2e91aa30b8
 trigger:
 - event_data: {}
   event_type: state_changed
