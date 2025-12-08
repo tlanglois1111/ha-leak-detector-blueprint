@@ -5,7 +5,7 @@ blueprint:
   input:
     excluded_sensors:
       name: Excluded Sensors
-      description: Sensors to exclude from leak detection (e.g., rain sensors). Use entity IDs.
+      description: Moisture sensors to exclude from leak detection (e.g., outdoor rain sensors)
       default: []
       selector:
         entity:
@@ -31,7 +31,7 @@ condition:
 - condition: template
   value_template: '{{ trigger.event.data.new_state.state == "on" }}'
 - condition: template
-  value_template: '{{ trigger.event.data.entity_id not in excluded_sensors }}'
+  value_template: '{{ trigger.event.data.entity_id not in (excluded_sensors | list) }}'
 action:
 - choose: []
   default: !input actions
