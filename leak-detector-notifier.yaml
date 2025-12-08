@@ -44,7 +44,7 @@ condition:
   # Exclude selected sensors
   - condition: template
     value_template: >
-      {{ trigger.entity_id not in !input excluded_sensors }}
+      {{ trigger.entity_id not in input_excluded_sensors }}
 
 action:
   - choose: []
