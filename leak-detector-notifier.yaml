@@ -13,17 +13,6 @@ blueprint:
               device_class: moisture
           multiple: true
 
-    excluded_sensors:
-      name: Excluded Sensors
-      description: Moisture sensors to exclude from leak detection (e.g., outdoor rain sensors)
-      default: []
-      selector:
-        entity:
-          filter:
-            - domain: binary_sensor
-              device_class: moisture
-          multiple: true
-
     actions:
       name: Actions
       description: >
@@ -48,10 +37,6 @@ condition:
   - condition: template
     value_template: >
       {{ trigger.to_state.state == "on" }}
-
-  - condition: template
-    value_template: >
-      {{ trigger.entity_id not in input_excluded_sensors }}
 
 action:
   - choose: []
