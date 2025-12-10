@@ -32,11 +32,16 @@ trigger:
 condition:
   - condition: template
     value_template: >
-      {{ trigger.to_state.attributes.device_class == "moisture" }}
+      {{ trigger is defined
+         and trigger.to_state is defined
+         and trigger.to_state.attributes.device_class == 'moisture' }}
 
   - condition: template
     value_template: >
-      {{ trigger.to_state.state == "on" }}
+      {{ trigger is defined
+         and trigger.to_state is defined
+         and trigger.to_state.state == 'on' }}
+
 
 action:
   - choose: []
